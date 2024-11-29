@@ -16,6 +16,8 @@ export class UsersService {
     };
 
     this.users.push(newUser);
+
+    return newUser;
   }
 
   findAll() {
@@ -27,12 +29,14 @@ export class UsersService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return this.users.map((user) => {
+    this.users = this.users.map((user) => {
       if (user.id === id) {
         return { ...user, ...updateUserDto };
       }
       return user;
     });
+
+    return this.findOne(id);
   }
 
   remove(id: number) {
