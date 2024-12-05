@@ -12,10 +12,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const newUser: User = new User();
-
-    newUser.name = createUserDto.name;
-    newUser.books = createUserDto.books;
+    const newUser = Object.assign(new User(), createUserDto);
 
     return await this.usersPersistenceRepository.create(newUser);
   }
@@ -29,16 +26,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const userUpdates: Partial<User> = {};
-
-    if (updateUserDto.name) {
-      userUpdates.name = updateUserDto.name;
-    }
-
-    if (updateUserDto.books) {
-      userUpdates.books = updateUserDto.books;
-    }
-
+    const userUpdates: Partial<User> = Object.assign({}, updateUserDto);
     return await this.usersPersistenceRepository.update(id, userUpdates);
   }
 
