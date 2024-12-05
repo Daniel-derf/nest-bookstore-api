@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { InMemoryUsersGateway } from './gateways/users-gateway-in-memory';
+import { InMemoryUsersRepository } from './repositories/users-repository-in-memory';
 
 @Module({
   controllers: [UsersController],
   providers: [
     UsersService,
-    InMemoryUsersGateway,
+    InMemoryUsersRepository,
     {
-      provide: 'UsersPersistenceGateway',
-      useExisting: InMemoryUsersGateway,
+      provide: 'UsersPersistenceRepository',
+      useExisting: InMemoryUsersRepository,
     },
   ],
 })

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
-import { UsersGatewayInterface } from './users-gateway-interface';
+import { UsersRepositoryInterface } from './users-repository-interface';
 
 @Injectable()
-export class InMemoryUsersGateway implements UsersGatewayInterface {
+export class InMemoryUsersRepository implements UsersRepositoryInterface {
   private users: User[] = []; // Armazenamento em memória
 
   async create(user: User): Promise<User> {
