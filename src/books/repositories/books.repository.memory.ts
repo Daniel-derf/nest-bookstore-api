@@ -1,6 +1,8 @@
 import { BooksRepositoryInterface } from './books.repository.interface';
 import { Book } from '../entities/book.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class InMemoryBooksRepository implements BooksRepositoryInterface {
   private books: Book[] = [];
   private nextId: number = 1;
