@@ -17,14 +17,14 @@ describe('UsersService', () => {
 
   it('should create a new user', async () => {
     const newUser = await service.create({ name: 'Daniel', books: [] });
-    expect(await usersDBRep.findAll()).toEqual([newUser]);
+    expect(await service.findAll()).toEqual([newUser]);
   });
 
   it('should delete a user', async () => {
     await service.create({ name: 'Maria', books: [] });
     await service.remove(1);
 
-    expect(await usersDBRep.findAll()).toEqual([]);
+    expect(await service.findAll()).toEqual([]);
   });
 
   it('should edit a user', async () => {
@@ -32,7 +32,7 @@ describe('UsersService', () => {
 
     await service.update(1, { name: 'edited Roberto' });
 
-    expect(await usersDBRep.findById(1)).toEqual({
+    expect(await service.findOne(1)).toEqual({
       name: 'edited Roberto',
       id: 1,
       books: [],
