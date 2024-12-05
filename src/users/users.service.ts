@@ -1,48 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersGatewayInterface } from './gateways/users-gateway-interface';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  private users = [
-    { id: 1, name: 'Daniel', books: [1, 2, 3] },
-    { id: 2, name: 'Robert', books: [4, 5, 6] },
-  ];
+  constructor(
+    @Inject('UsersPersistenceGateway')
+    private usersPersistenceGateway: UsersGatewayInterface,
+  ) {}
 
-  create(createUserDto: CreateUserDto) {
-    const newUser = {
-      ...createUserDto,
-      id: Date.now(),
-    };
+  async create(createUserDto: CreateUserDto) {
+    const newUser: User = new User();
 
-    this.users.push(newUser);
+    newUser.name = createUserDto.name;
+    newUser.books = createUserDto.books;
 
-    return newUser;
+    return await this.usersPersistenceGateway.create(newUser);
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return await this.usersPersistenceGateway.findAll();
   }
 
-  findOne(id: number) {
-    return this.users.find((user) => user.id === id);
+  async findOne(id: number) {
+    return await this.usersPersistenceGateway.findById(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    this.users = this.users.map((user) => {
-      if (user.id === id) {
-        return { ...user, ...updateUserDto };
-      }
-      return user;
-    });
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const userUpdates: Partial<User> = {};
 
-    return this.findOne(id);
+    if (updateUserDto.name) {
+      userUpdates.name = updateUserDto.name;
+    }
+
+    if (updateUserDto.books) {
+      userUpdates.books = updateUserDto.books;
+    }
+
+    return await this.usersPersistenceGateway.update(id, userUpdates);
   }
 
-  remove(id: number) {
-    const removedUser = this.users.find((user) => user.id === id);
-    this.users = this.users.filter((user) => user.id !== id);
-
-    return removedUser;
+  async remove(id: number) {
+    return await this.usersPersistenceGateway.delete(id);
   }
 }
